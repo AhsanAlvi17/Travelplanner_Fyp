@@ -57,9 +57,7 @@ return (
       <TextInput style={styles.input} onChangeText={(U_email) => { setemail(U_email) }}placeholder='Email' />
       <TextInput style={styles.input} onChangeText={(U_password) => {setPassword(U_password)}}placeholder='Password' />
       <Button onPress={handleSignup} title='Signup' />
-      <Button onPress={handleSignup} title='Signup' />
-      <Button onPress={handleSignup} title='Signup' />
-
+      
 
       <View style={{ marginTop: 10 }}>
         <View style={{ bottom: 10 }}>
