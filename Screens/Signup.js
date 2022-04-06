@@ -63,9 +63,9 @@ return (
         <View style={{ bottom: 10 }}>
 {/* <Button style={{ buttom: 30 }} title="Signup" onPress={() => Alert.alert('Wellome')} /> */}
         </View>
-        <View style={styles.login}>
-          {/* <Button onPress={() => navigation.navigate('Login')} title='login' /> */}
-        </View>
+        {/* <View style={styles.login}>
+          <Button onPress={() => navigation.navigate('Login')} title='login' />
+        </View> */}
       </View>
     </>
   );

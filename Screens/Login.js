@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, TextInput, TouchableOpacity, StyleSheet, Image, axios } from 'react-native';
+import { View, Button, TextInput, TouchableOpacity, StyleSheet, Image, Text } from 'react-native';
 //import { createNativeStackNavigator } from '@react-navigation/native-stack'
 //import { NavigationContainer } from '@react-navigation/native'
 const Login = ({ navigation }) => {
@@ -8,39 +8,40 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = React.useState("")
     const handleLogin = async () => {
 
-    
-            fetch('http://192.168.18.8/Final/api/Users/login', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'content-Type': 'application/json',
 
-                },
-                body: JSON.stringify({
-                    U_password: password,
-                    U_email: email,
+        fetch('http://192.168.18.8/Final/api/Users/login', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'content-Type': 'application/json',
 
-                }),
+            },
+            body: JSON.stringify({
+                U_password: password,
+                U_email: email,
+
+            }),
+        })
+            .then(response => response.json())
+            .then(responseJson => {
+                console.log(responseJson)
+                if (responseJson.U_email == email) { navigation.navigate("Home") }
+                <Button onPress={() => navigation.navigate('Signup')} title='Signup' />
+
+                //    if(responseJson.user_email==email){
+                //      if(responseJson.user_type=='HomeScreen'){
+                //          window.alert("Wellcome to libraray")
+                //         // this.props.navigation.dispatch(StackActions.replace('HomeScreen'))
+                //          navigation.navigate('HomeScreen');
+
+                //      }else {
+                //          navigation.navigate('SignupScreen');
+                //          global.user_id=responseJson.U_email;
+                //         //alert(global.user_id);
+                //      }
+                //     }
             })
-                .then(response => response.json())
-                .then(responseJson => {
-                    console.log(responseJson)
-                    if (responseJson.U_email == email) 
-                 { navigation.navigate("Home")}
-                    //    if(responseJson.user_email==email){
-                    //      if(responseJson.user_type=='HomeScreen'){
-                    //          window.alert("Wellcome to libraray")
-                    //         // this.props.navigation.dispatch(StackActions.replace('HomeScreen'))
-                    //          navigation.navigate('HomeScreen');
 
-                    //      }else {
-                    //          navigation.navigate('SignupScreen');
-                    //          global.user_id=responseJson.U_email;
-                    //         //alert(global.user_id);
-                    //      }
-                    //     }
-                })
-        
 
 
 
@@ -90,6 +91,15 @@ const Login = ({ navigation }) => {
             <TextInput style={styles.input} value={email} onChangeText={(email) => { setEmail(email) }} placeholder='Email' />
             <TextInput style={styles.input} value={password} onChangeText={(pass) => { setPassword(pass) }} placeholder='Password' />
             <Button onPress={handleLogin} title='Login' />
+            <View style={styles.already}>
+                <Text>Don't  have  Account get Signup </Text>
+            </View>
+
+
+
+            <View style={styles.login}>
+                <Button onPress={() => navigation.navigate('Signup')} title='Signup' />
+            </View>
         </>
     );
 
@@ -123,6 +133,23 @@ const styles = StyleSheet.create({
 
 
     },
+    already: {
+        fontFamily: "Arial",
+        textDecorationStyle: 'Solid',
+        fontSize: "50%",
+        fontWeight: "bold",
+        textalign: 'Center',
+
+
+
+    },
+
+    login: {
+        top: 10,
+
+
+    },
+
     image: {
         width: 500,
         height: 200,
