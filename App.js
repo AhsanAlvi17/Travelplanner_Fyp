@@ -45,7 +45,7 @@ export default function App() {
         <Drawer.Screen name="Signup" component={SignupScreen} />
         <Drawer.Screen name="Dash" component={DashScreen} />
         <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-        <Drawer.Screen name="Privacy" component={PrivacyScreen} />
+         <Drawer.Screen name="Privacy" component={PrivacyScreen} /> 
       </Drawer.Navigator>
     </NavigationContainer>
 
