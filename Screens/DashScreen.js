@@ -1,176 +1,101 @@
-//import {   Button } from 'react-native'
-//import React from 'react'
-
-import * as React from 'react';
-import { Drawer, Searchbar } from 'react-native-paper';
-
-import { Text, ScrollView, StyleSheet, Image, View, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useState, useEffect, } from 'react';
+import { Image } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Text,  StyleSheet, View, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { Button } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+//192.168.18.8
+//192.168.43.242
+export default function DashScreen({ navigation,route }) {
+  const [data, setdata] = useState([]);
+  const [text, settext] = useState('');
+  useEffect(() => {
+    fetch('http://192.168.18.8/Final/api/addplace/Allplaces', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'content-Type': 'application/json',
+      },
+    })  
+      .then(response => response.json())
+      .then(responseJson => {
+        setdata(responseJson)
+        console.log("----response",responseJson)
+      })
 
-export default function DashScreen({ navigation }) {
-  const [searchQuery, setSearchQuery] = React.useState('');
-
-  const onChangeSearch = query => setSearchQuery(query);
-
+  }, [route.params?.locationAdded]);  
 
   return (
-    <ScrollView style={styles.ScrollView}>
+    <>
+    {/* <ScrollView style={styles.ScrollView}> */}
+      <View style={{ backgroundColor: "gray", marginTop: 10, padding: 10 }}>
+        <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 
-      <SafeAreaView>
-        <View style={{ backgroundColor: "gray", marginTop: 10, padding: 10 }}>
-          <View style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Image style={{ width: 60, height: 60 }} source={require('../images/mainlogo.jpg')} />
 
-            <Image style={{ width: 60, height: 60 }} source={require('../images/mainlogo.jpg')} />
+        </View>
+        <View style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
+
+          <View style={{ width: "49%", marginRight: 10, }}>
+            <Button icon="flower" mode="contained" onPress={() => console.log('Pressed')}>
+              Park
+            </Button>
+
 
           </View>
-          <View style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
+          <View style={{ width: "50%", }}>
+            <Button icon="tea" mode="contained" onPress={() => console.log('Pressed')}>
+              restaurant</Button>
 
-            <View style={{ width: "49%", marginRight: 10, }}>
-              <Button icon="flower" mode="contained" onPress={() => console.log('Pressed')}>
-                Park
-              </Button>
+          </View>
+        </View>
+        <View style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
+          <View style={{ width: "49%", marginRight: 10, }}>
+            <Button icon="silverware" mode="contained" onPress={() => console.log('Pressed')}>
+              Hotel</Button></View>
+          <View style={{ width: "50%", }}>
+            <Button Button icon="mosque" mode="contained" onPress={() => console.log('Pressed')}>Historical</Button>
+          </View>
+        </View>
+      </View>
+      <View style={{ marginTop: 10, marginHorizontal: 20}}>
 
+        <TextInput
+          placeholder="Search"
+          onChangeText={text => settext(text)}
+        
+        />
+      </View>
+      {/* </ScrollView> */}
+      
+        <FlatList
+          //data={data.filter(b => b.p_name.includes(text))}
+          data={data.filter(b => b.city.includes(text) ) ||(a=> a.p_name.includes(text))}
 
+          //keyExtractor={item => item.id}
+          renderItem={({ item }) =>
+            <View>
+
+              <Image source={{ uri: item.p_image }}
+                resizeMode='stretch'
+                resizeMethod='resize'
+                style={{ width: 350, height: 200 }}
+              />
+              <TouchableOpacity
+              onPress={()=>navigation.navigate("Map",{longitude:item.longitude,latitude:item.latitude})}
+              >
+              <View style={{ flexDirection: 'row' }}>
+                <Icon name='map-marker-alt' color={'red'} size={20} />
+                <Text style={{marginLeft:10}}>{item.p_name}</Text>
+              </View>
+              </TouchableOpacity>
+              <Text>{item.description}</Text>
             </View>
-            <View style={{ width: "50%", }}>
-              <Button icon="tea" mode="contained" onPress={() => console.log('Pressed')}>
-                restaurant</Button>
-
-            </View>
-          </View>
-          <View style={{ display: "flex", flexDirection: "row", marginTop: 10 }}>
-            <View style={{ width: "49%", marginRight: 10, }}>
-              <Button icon="silverware" mode="contained" onPress={() => console.log('Pressed')}>
-                Hotel</Button></View>
-            <View style={{ width: "50%", }}>
-              <Button icon="mosque" mode="contained" onPress={() => console.log('Pressed')}>Historical</Button>
-            </View>
-          </View>
-        </View>
-        <View style={{ marginTop: 10, marginHorizontal: 20 }}>
-
-          <Searchbar
-            placeholder="Search"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
-          />
-        </View>
-
-
-
-
-        <View style={styles.actionButtons}>
-
-
-
-          <TouchableOpacity
-            onPress={() => handleLogin()}
-          >
-            <Text style={{ borderWidth: 1, color: "white", marginLeft: 60, backgroundColor: 'blue', borderRadius: 20, padding: 10 }}>Search</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleLogin()}
-          >
-            <Text style={{ borderWidth: 1, color: "white", backgroundColor: 'blue', borderRadius: 20, padding: 10 }}>Add Place</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* <Button onPress={() => navigation.navigate('Signup')} title='Upload' />
-
-
-          <Button onPress={() => navigation.navigate('Signup')} title='Search' />
-
-          <Button onPress={() => navigation.navigate('Signup')} title='Verify place' /> */}
-
-        <View style={{ position: "relative", marginBottom: 20, borderWidth: 2, marginLeft: 10, borderColor: "green", marginRight: 10, flexDirection: 'row' }}>
-          <Image style={styles.image} source={require('../images/dino.jpeg')} />
-          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text style={{ color: 'black', fontWeight: 'bold', justifyContent: 'space-between', margintop: -10 }}><Text style={{ color: 'red' }}>Ammusment:</Text>Dinno Valley</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red', }}>Location: </Text>Islamabad</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Ticket:</Text>400</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Opening Time :</Text> 10AM</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Closing Time:</Text> 6PM</Text>
-
-          </View>
-        </View>
-
-
-        {/* <View style={{ position: "relative", marginBottom: 20 }}>
-          <Image style={styles.image} source={require('../images/dino.jpeg')} />
-          <Text style={styles.caption}>
-            Dino Valley Amusement park in Pakistan
-          </Text>
-        </View> */}
-
-
-        {/* <View>
-          <Image style={styles.image} source={require('../images/tuscany.jpg')} />
-          <Text style={styles.caption}>
-            Best Italian cuisine restaurants in Islamabad.
-
-          </Text>
-        </View> */}
-        <View style={{ position: "relative", flexDirection: 'row', marginBottom: 20, borderWidth: 2, marginLeft: 10, marginRight: 10, borderColor: 'green', padding: 5 }}>
-          <Image style={styles.image} source={require('../images/tuscany.jpg')} />
-          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text style={{ color: 'black', fontWeight: 'bold', justifyContent: 'space-between' }}><Text style={{ color: 'red' }}>Hotel :</Text>Tuscany</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Location: </Text>Islamabad</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Special Dishes:</Text> Italian Food</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Opening Time :</Text> 10AM</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}><Text style={{ color: 'red' }}>Closingg Time:</Text> 11PM</Text>
-
-          </View>
-
-        </View>
-
-      </SafeAreaView>
-
-    </ScrollView>
-  );
-}
-
-const Tab = createBottomTabNavigator();
-
- function App() {
-  return (
-
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="red"
-      tabBarOptions={{
-        activeTintColor: '#fff',
-        inactiveTintColor: 'lightgray',
-        activeBackgroundColor: '#c4461c',
-        inactiveBackgroundColor: '#b55031',
-        style: {
-          backgroundColor: '#CE4418',
-          paddingBottom: 3
-        }
-      }}
-    >
-      <Tab.Screen
-        options={{
-          tabBarLabel: 'Shop Travel',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
-          ),
-        }}
-        name="Shop Travel" component={HomeScreen} />
-      <Tab.Screen
-        options={{
-          tabBarLabel: 'Updates',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={26} />
-          ),
-        }}
-        name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
+          }
+        />
+      </>
 
   );
 }
-
 
 
 const styles = StyleSheet.create({

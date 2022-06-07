@@ -7,7 +7,8 @@ const Login = ({ navigation }) => {
 
     const [password, setPassword] = React.useState("")
     const handleLogin = async () => {
-
+       // 192.168.43.242
+       //192.168.18.8
 
         fetch('http://192.168.18.8/Final/api/Users/login', {
             method: 'POST',
@@ -25,61 +26,24 @@ const Login = ({ navigation }) => {
             .then(response => response.json())
             .then(responseJson => {
                 console.log(responseJson)
-                if (responseJson.U_email == email) { navigation.navigate("Home") }
+                if (responseJson.U_email == email) { navigation.navigate("Drawershow") }
                 <Button onPress={() => navigation.navigate('Signup')} title='Signup' />
 
-                //    if(responseJson.user_email==email){
-                //      if(responseJson.user_type=='HomeScreen'){
-                //          window.alert("Wellcome to libraray")
-                //         // this.props.navigation.dispatch(StackActions.replace('HomeScreen'))
-                //          navigation.navigate('HomeScreen');
+                   if(responseJson.user_email==email)
+                     if(responseJson.user_type=='HomeScreen'){
+                         window.alert("Wellcome to libraray")
+                        // this.props.navigation.dispatch(StackActions.replace('HomeScreen'))
+                         navigation.navigate('HomeScreen');
+                     }
+                    else{
+                //          navigation.navigate('Drawershow');
+                        global.U_id=responseJson.U_email;
+                //          console.log(responseJson.U_email);
 
-                //      }else {
-                //          navigation.navigate('SignupScreen');
-                //          global.user_id=responseJson.U_email;
-                //         //alert(global.user_id);
-                //      }
-                //     }
+                //    //alert(global.user_id);
+                //    }
+                     }
             })
-
-
-
-
-
-
-
-
-
-
-
-        // const requestOptions = {
-        //     method: 'GET',
-        //     // headers: { 'Content-Type': 'application/json' },
-        //     // body:{
-        //     //     U_email: email,
-        //     //     U_password: password
-        //     // }
-        // };
-        // console.log("===",requestOptions)
-
-        // fetch('http://localhost/Final/api/Users/Allusers', requestOptions)
-        //     .then(response => console.log("response",response))
-        //     .catch(error => console.log("error",error))
-        //     .then(data => console.log("response", data));
-
-        // try {
-        //   axios.get('http://localhost/Final/api/Users/Allusers') 
-        // .then(response => console.log("response",response))
-        //  .catch(error => console.log("error",error))
-        //  .then(data => console.log("response", data));
-
-        // } catch (error) {
-        //     alert("An error has occurred",error);
-
-        // }
-
-
-
 
     };
 
@@ -90,9 +54,13 @@ const Login = ({ navigation }) => {
             </View>
             <TextInput style={styles.input} value={email} onChangeText={(email) => { setEmail(email) }} placeholder='Email' />
             <TextInput style={styles.input} value={password} onChangeText={(pass) => { setPassword(pass) }} placeholder='Password' />
+            
+            
+            
+            
             <Button onPress={handleLogin} title='Login' />
             <View style={styles.already}>
-                <Text>Don't  have  Account get Signup </Text>
+                <Text style={styles.txt}>Don't have account get Signup </Text>
             </View>
 
 
@@ -114,6 +82,13 @@ const styles = StyleSheet.create({
 
 
     },
+    txt: {
+        fontWeight: '400',
+        fontSize: 15,
+        color: '#000000',
+        marginTop: 10,
+        marginLeft: 100,
+      },
     text: {
         color: '#06111C',
         fontSize: 25,

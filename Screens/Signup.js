@@ -1,10 +1,7 @@
-import { View, TextInput, Alert, StyleSheet, Image, Button, TouchableOpacity } from 'react-native'
+import { View, TextInput, StyleSheet, Image, Button, } from 'react-native'
 import React from 'react' 
 
-//const Signup = ({ navigation }) => {
-
   const Signup = ({navigation}) => {
-    //const [U_id, setU_id] = React.useState('');
     const [U_name, setname] = React.useState('');
     const [U_email, setemail] = React.useState('');
     const [U_password, setPassword] = React.useState('');

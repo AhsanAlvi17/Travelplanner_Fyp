@@ -1,53 +1,64 @@
 import React from 'react';
 import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './Screens/HomeScreen';
-import NotificationsScreen from './Screens/NotificationsScreen';
 import DashScreen from './Screens/DashScreen';
 import LoginScreen from './Screens/Login';
-import PrivacyScreen from './Screens/PrivacyScreen';
+//import PrivacyScreen from './Screens/PrivacyScreen';
 import SignupScreen from './Screens/Signup';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Drawershow from './Screens/Drawershow';
+import Map from './Screens/Map';
+
 
 const Stack = createNativeStackNavigator();
 
-
-const MyStack = () => {
+export default function MyStack(){
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{ title: 'Welcome' }}
+          options={{headerShown: false}}
         />
-        <Stack.Screen name="Home" component={HomeScreen} />
+         <Stack.Screen
+          name="Drawershow"
+          component={Drawershow}
+          options={{headerShown: false}}
+        />
+         <Stack.Screen name="Signup" component={SignupScreen} />
+         <Stack.Screen name="Map" component={Map} />
+       
 
+{/* 
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AddPlaces" component={AddPlaces} /> */}
+
       </Stack.Navigator>
     </NavigationContainer>
   )
 };
 
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Login">
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Login" component={LoginScreen} />
-        <Drawer.Screen name="Signup" component={SignupScreen} />
-        <Drawer.Screen name="Dash" component={DashScreen} />
-        <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-         <Drawer.Screen name="Privacy" component={PrivacyScreen} /> 
-      </Drawer.Navigator>
-    </NavigationContainer>
+// export default function App() {
+//   return (
+//     <NavigationContainer>
+//       <Drawer.Navigator>
+//         <Drawer.Screen name="Home" component={HomeScreen} />
+       
+//          {/* <Drawer.Screen name="Signup" component={SignupScreen} />  */}
+//         <Drawer.Screen name="Dash" component={DashScreen} />
+//         <Drawer.Screen name="Add Places" component={AddPlaces} />
+//          {/* <Drawer.Screen name="Privacy" component={PrivacyScreen} />  */}
+//       </Drawer.Navigator>
+//     </NavigationContainer>
 
-  );
-}
+//   );
+// }

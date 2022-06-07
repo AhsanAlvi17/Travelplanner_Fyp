@@ -1,104 +1,70 @@
 
-import { View, TextInput, Alert, StyleSheet, Image, Button, ScrollView, Text, TouchableOpacity, ToastAndroid } from 'react-native'
-import React, { useState } from 'react';
-import { Checkbox } from 'react-native-paper';
+import { View, TextInput, Alert, StyleSheet, Image, Button, ScrollView, Text, TouchableOpacity, ToastAndroid, FlatList } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { CheckBox } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
-import ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { Marker, } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
-const Signup = ({ navigation }) => {
+const AddPlaces = ({ navigation }) => {
   //const [U_id, setU_id] = React.useState('');
   const [U_name, setU_name] = React.useState('');
-  const [location, setlocation] = React.useState('');
+  const [Description, setDescription] = React.useState('');
   const [city, setcity] = React.useState('');
-  const [checked, setChecked] = React.useState(false);
+  const [privatestatus, setprivatestatus] = React.useState();
+  const [one, setone] = useState(false);
+  const [two, settwo] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [image, setimage] = useState();
+
   const [items, setItems] = useState([
     { label: 'Hotel', value: 'Hotel' },
     { label: 'Park', value: 'Park' },
     { label: 'Restaurant', value: 'Restaurant' },
     { label: 'Historical ', value: 'Historical ' }
-
   ]);
-  const handleSignup = () => {
-    if (
-      U_name.trim() &&
-      U_email.trim() &&
-      U_password.trim()
-    ) {
-      navigation.navigate("Login");
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          //U_id: U_id,
-          U_name: U_name,
-          U_email: U_email,
-          U_password: U_password,
-        }),
-      };
-      fetch(
-        'http://192.168.18.8/Final/api/Users/Addusers',
-        requestOptions,
-      )
-        .then(response => {
-          if (!response.ok) {
-            throw Error('Check your connection');
-          } else {
-            alert('Sign Up Successfull');
-          }
-          response.json();
-        })
-        .then(data => console.log('---response', data))
-        .catch(err => {
-          alert(err.message);
-        });
-    } else {
-      alert('Plz fill complete form');
-    }
-  };
-  // const selectFile = () => {
+  const [position, setPosition] = useState({
+    latitude: 33.6660103,
+    longitude: 73.1531032,
+    latitudeDelta: 0.001,
+    longitudeDelta: 0.001,
+  });
+  useEffect(() => {
+    Geolocation.getCurrentPosition((pos) => {
+      const crd = pos.coords;
+      setPosition({
+        latitude: crd.latitude,
+        longitude: crd.longitude,
+        latitudeDelta: 0.0421,
+        longitudeDelta: 0.0421,
+      });
+ 
+    }).catch((err) => {
+      console.log(err);
+    });
+  }, []);
+  const checkbox1 = () => {
+    setone(true);
+    settwo(!true);
+    setprivatestatus("Private")
+    ToastAndroid.show("private", 500)
+  }
+  const checkbox2 = () => {
+    settwo(true);
+    setone(!true);
+    setprivatestatus("Public")
+    ToastAndroid.show("public", 500)
 
-  //   var options = {
-  //     title: 'Select Image',
-  //     customButtons: [
-  //       {
-  //         name: 'customOptionKey',
-  //         title: 'Choose file from Custom Option'
-  //       },
-  //     ],
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: 'images',
-  //     },
-  //   };
-  //   ImagePicker.showImagePicker(options, res => {
-  //     console.log('Response = ', res);
-  //     if (res.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (res.error) {
-  //       console.log('ImagePicker Error: ', res.error);
-  //     } else if (res.customButton) {
-  //       console.log('User tapped custom button: ', res.customButton);
-  //       alert(res.customButton);
-  //     } else {
-  //       let source = res;
-  //       // this.setState({
-  //       //   resourcePath: source,
-  //       // });
-  //       setimagePath(source)
-  //     }
-  //   });
-  // };
+  }
+  
   //{Image upload }
   const selectFile = async () => {
     try {
       const res = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
-        //There can me more options as well
+        //There can me more options as we
         // DocumentPicker.types.allFiles
         // DocumentPicker.types.images
         // DocumentPicker.types.plainText
@@ -106,7 +72,7 @@ const Signup = ({ navigation }) => {
         // DocumentPicker.types.pdf
       });
       const obj = Object.assign({}, ...res)
-      console.log(obj.uri)
+      
       uploadimage(obj);
       setimage(obj.uri)
       //Printing the log realted to the file
@@ -131,7 +97,7 @@ const Signup = ({ navigation }) => {
   };
   // image upload in api
   async function uploadimage(obj) {
-    //console.log(res)
+    
     const data = new FormData();
     data.append('picture', {
       name: obj.name,
@@ -139,7 +105,7 @@ const Signup = ({ navigation }) => {
       uri: obj.uri
     });
     try {
-      let response = await fetch('http://192.168.18.8/Final/api/Uploadimage/Uploadimage', {
+      let response = await fetch('http://192.168.18.8/Final/api/Uploadimage/UploadFile', {
         method: 'POST',
         body: data,
         headers: {
@@ -147,14 +113,14 @@ const Signup = ({ navigation }) => {
         }
       })
       let json = await response.json()
-      console.log(json)
       ToastAndroid.show("image is add", 2000)
     } catch (e) {
-      console.log(e)
+      console.log(e) 
     }
   }
   // add places
   const _sendplaces = () => {
+//192.168.18.8
     fetch('http://192.168.18.8/Final/api/addplace/Addplaces', {
       method: 'POST',
       headers: {
@@ -164,21 +130,38 @@ const Signup = ({ navigation }) => {
       },
       body: JSON.stringify({
         p_name: U_name,
-        location: location,
+        Description: Description,
         city: city,
         p_image: image,
+        status: privatestatus,
+        catg: value,
+        latitude: curentPosition.latitude,
+        longitude: curentPosition.longitude
       }),
     })
       .then(response => response.json())
       .then(responseJson => {
         ToastAndroid.show("Location is add", 2000)
+        navigation.navigate("Dashboard",{locationAdded:true})
 
       })
 
   }
+  const [curentPosition, setCurentPosition] = useState({
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421, latitude: 33.6844,
+    longitude: 73.0479,
+  });
 
+  const onMapPress = (e) => {
+    // alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
+    setCurentPosition({
+      ...curentPosition,
+      latitude: e.nativeEvent.coordinate.latitude,
+      longitude: e.nativeEvent.coordinate.longitude
+    })
 
-
+  }
 
   return (
     <ScrollView>
@@ -186,32 +169,45 @@ const Signup = ({ navigation }) => {
         {/* MAP Code */}
         <View style={styles.mapcontainer}>
           <MapView
-            provider={PROVIDER_GOOGLE}
+            onPress={(e) => onMapPress(e)}
+
             style={styles.map}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}
-            showUserLocation={true} >
+            initialRegion={position}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            followsUserLocation={true}
+            showsCompass={true}
+            scrollEnabled={true}
+            zoomEnabled={true}
+            pitchEnabled={true}
+            rotateEnabled={true}>
             <Marker coordinate={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-            }} />
+              latitude: parseFloat(curentPosition.latitude),
+              longitude: parseFloat(curentPosition.longitude),
+            }}
+
+            />
+
           </MapView>
+
         </View>
+        <Text style={{ color: 'red' }}>{curentPosition.latitude}</Text>
+        <Text style={{ color: 'red' }}>{curentPosition.longitude}</Text>
         <TextInput style={styles.input} onChangeText={(U_name) => setU_name(U_name)} placeholder='Name of Place' />
-        <TextInput style={styles.input} onChangeText={(location) => setlocation(location)} placeholder='Location' />
+        <TextInput style={styles.input} onChangeText={(Description) => setDescription(Description)} placeholder='Description' />
         <TextInput style={styles.input} onChangeText={(city) => setcity(city)} placeholder='City' />
         {/* Checkbox  */}
         <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
           <Text style={{ fontSize: 20 }}>Private</Text>
-          <Checkbox
-            status={checked ? 'checked' : 'unchecked'}
-            onPress={() => {
-              setChecked(!checked);
-            }}
+          <CheckBox
+            //status={checked?'checked':'unchecked'}
+            onPress={() => checkbox1()}
+            checked={one}
+          />
+          <Text style={{ fontSize: 20 }}>public</Text>
+          <CheckBox
+            onPress={() => checkbox2()}
+            checked={two}
           />
         </View>
       </View>
@@ -265,7 +261,7 @@ const Signup = ({ navigation }) => {
     </ScrollView>
   );
 }
-export default Signup
+export default AddPlaces;
 
 const styles = StyleSheet.create({
   body: {
