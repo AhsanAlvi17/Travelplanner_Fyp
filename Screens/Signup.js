@@ -1,5 +1,6 @@
 import { View, TextInput, StyleSheet, Image, Button, } from 'react-native'
 import React from 'react' 
+import API from '../API';
 
   const Signup = ({navigation}) => {
     const [U_name, setname] = React.useState('');
@@ -25,7 +26,7 @@ import React from 'react'
           }),
         };
         fetch(
-          'http://192.168.18.8/Final/api/Users/Addusers',
+          `http://${API}/Final/api/Users/Addusers`,
           requestOptions,
         )
           .then(response => {

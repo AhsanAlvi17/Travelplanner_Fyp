@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, TextInput, TouchableOpacity, StyleSheet, Image, Text } from 'react-native';
+import API from '../API';
+
 //import { createNativeStackNavigator } from '@react-navigation/native-stack'
 //import { NavigationContainer } from '@react-navigation/native'
 const Login = ({ navigation }) => {
-    const [email, setEmail] = React.useState("")
+    const [name, setname] = React.useState("")
 
     const [password, setPassword] = React.useState("")
     const handleLogin = async () => {
        // 192.168.43.242
        //192.168.18.8
+       //192.168.43.242
 
-        fetch('http://192.168.18.8/Final/api/Users/login', {
+        fetch(`http://${API}/Final/api/Users/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -19,28 +22,27 @@ const Login = ({ navigation }) => {
             },
             body: JSON.stringify({
                 U_password: password,
-                U_email: email,
+                U_name:name,
 
             }),
         })
             .then(response => response.json())
             .then(responseJson => {
                 console.log(responseJson)
-                if (responseJson.U_email == email) { navigation.navigate("Drawershow") }
+                if (responseJson.U_name == name) { navigation.navigate("Drawershow") }
                 <Button onPress={() => navigation.navigate('Signup')} title='Signup' />
 
-                   if(responseJson.user_email==email)
-                     if(responseJson.user_type=='HomeScreen'){
-                         window.alert("Wellcome to libraray")
-                        // this.props.navigation.dispatch(StackActions.replace('HomeScreen'))
-                         navigation.navigate('HomeScreen');
-                     }
-                    else{
+                   if(responseJson.U_name==name)
+                    //  if(responseJson.user_type=='HomeScreen'){
+                    //      navigation.navigate('HomeScreen');
+                    //  }
+                    //else
+                    {
                 //          navigation.navigate('Drawershow');
-                        global.U_id=responseJson.U_email;
-                //          console.log(responseJson.U_email);
+                        global.U_name=responseJson.U_name;
+                         console.log(responseJson.U_name);
 
-                //    //alert(global.user_id);
+                //alert(global.U_name);
                 //    }
                      }
             })
@@ -52,7 +54,7 @@ const Login = ({ navigation }) => {
             <View>
                 <Image style={styles.image} source={require('../images/logo.png')} />
             </View>
-            <TextInput style={styles.input} value={email} onChangeText={(email) => { setEmail(email) }} placeholder='Email' />
+            <TextInput style={styles.input} value={name} onChangeText={(name) => { setname(name) }} placeholder='name' />
             <TextInput style={styles.input} value={password} onChangeText={(pass) => { setPassword(pass) }} placeholder='Password' />
             
             

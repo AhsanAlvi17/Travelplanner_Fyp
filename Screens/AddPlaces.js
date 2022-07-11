@@ -6,10 +6,11 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DocumentPicker from 'react-native-document-picker';
 import MapView, { Marker, } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-
+import API from '../API';
+//172.20.10.2
 const AddPlaces = ({ navigation }) => {
   //const [U_id, setU_id] = React.useState('');
-  const [U_name, setU_name] = React.useState('');
+  const [p_name, setp_name] = React.useState('');
   const [Description, setDescription] = React.useState('');
   const [city, setcity] = React.useState('');
   const [privatestatus, setprivatestatus] = React.useState();
@@ -23,11 +24,13 @@ const AddPlaces = ({ navigation }) => {
     { label: 'Hotel', value: 'Hotel' },
     { label: 'Park', value: 'Park' },
     { label: 'Restaurant', value: 'Restaurant' },
+    { label: 'Shooping ', value: 'Shooping ' },
     { label: 'Historical ', value: 'Historical ' }
   ]);
+  //30.3753 , 69.3451
   const [position, setPosition] = useState({
-    latitude: 33.6660103,
-    longitude: 73.1531032,
+    latitude: 30.3753,
+    longitude: 69.3451,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
@@ -95,6 +98,8 @@ const AddPlaces = ({ navigation }) => {
       }
     }
   };
+  const Rating="5"
+  const count="5"
   // image upload in api
   async function uploadimage(obj) {
     
@@ -105,7 +110,7 @@ const AddPlaces = ({ navigation }) => {
       uri: obj.uri
     });
     try {
-      let response = await fetch('http://192.168.18.8/Final/api/Uploadimage/UploadFile', {
+      let response = await fetch(`http://${API}/Final/api/Uploadimage/UploadFile`, {
         method: 'POST',
         body: data,
         headers: {
@@ -121,7 +126,7 @@ const AddPlaces = ({ navigation }) => {
   // add places
   const _sendplaces = () => {
 //192.168.18.8
-    fetch('http://192.168.18.8/Final/api/addplace/Addplaces', {
+    fetch(`http://${API}/Final/api/addplace/Addplaces`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -129,14 +134,16 @@ const AddPlaces = ({ navigation }) => {
 
       },
       body: JSON.stringify({
-        p_name: U_name,
+        p_name: p_name,
         Description: Description,
         city: city,
         p_image: image,
         status: privatestatus,
         catg: value,
         latitude: curentPosition.latitude,
-        longitude: curentPosition.longitude
+        longitude: curentPosition.longitude,
+        Rating:Rating,
+        count:count
       }),
     })
       .then(response => response.json())
@@ -149,8 +156,8 @@ const AddPlaces = ({ navigation }) => {
   }
   const [curentPosition, setCurentPosition] = useState({
     latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421, latitude: 33.6844,
-    longitude: 73.0479,
+    longitudeDelta: 0.0421, latitude: 30.3753,
+    longitude: 69.3451,
   });
 
   const onMapPress = (e) => {
@@ -193,7 +200,7 @@ const AddPlaces = ({ navigation }) => {
         </View>
         <Text style={{ color: 'red' }}>{curentPosition.latitude}</Text>
         <Text style={{ color: 'red' }}>{curentPosition.longitude}</Text>
-        <TextInput style={styles.input} onChangeText={(U_name) => setU_name(U_name)} placeholder='Name of Place' />
+        <TextInput style={styles.input} onChangeText={(p_name) => setp_name(p_name)} placeholder='Name of Place' />
         <TextInput style={styles.input} onChangeText={(Description) => setDescription(Description)} placeholder='Description' />
         <TextInput style={styles.input} onChangeText={(city) => setcity(city)} placeholder='City' />
         {/* Checkbox  */}
@@ -274,8 +281,8 @@ const styles = StyleSheet.create({
     top: 10
   },
   mapcontainer: {
-    height: 400,
-    width: 400,
+    height: 800,
+    width: 600,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },

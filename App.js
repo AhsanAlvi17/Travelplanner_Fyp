@@ -5,13 +5,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './Screens/HomeScreen';
 import DashScreen from './Screens/DashScreen';
 import LoginScreen from './Screens/Login';
-//import PrivacyScreen from './Screens/PrivacyScreen';
+import PrivacyScreen from './Screens/PrivacyScreen';
 import SignupScreen from './Screens/Signup';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Drawershow from './Screens/Drawershow';
 import Map from './Screens/Map';
-
+import Rating  from './Screens/Rating';
+import Privates  from './Screens/Privates';
+import Showcat from './Screens/Showcat';
+import FavPlaces from './Screens/FavPlaces';
+import AddPlaces from './Screens/AddPlaces';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,7 +35,14 @@ export default function MyStack(){
         />
          <Stack.Screen name="Signup" component={SignupScreen} />
          <Stack.Screen name="Map" component={Map} />
-       
+         <Stack.Screen name="Rating" component={Rating} />
+         <Stack.Screen name="Privates" component={Privates} />
+         <Stack.Screen name="Showcat" component={Showcat} />
+      <Stack.Screen name="FavPlaces" component={FavPlaces} />
+      <Stack.Screen name="AddPlaces" component={AddPlaces} />
+
+         {/* <Stack.Screen name="Privarcy" component={Privarcy} /> */}
+
 
 {/* 
         <Stack.Screen name="Signup" component={SignupScreen} />
